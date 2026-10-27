@@ -91,3 +91,19 @@ pip install -r requirements.txt
 **Running the server** (`uvicorn app.main:app --reload`) starts your app and keeps it running, listening for real requests on port 8000. You test it by hand, in a browser or on the `/docs` page, and it runs until you stop it.
 
 **Running pytest** (`pytest`) runs your test functions automatically and then exits. It uses `TestClient`, which sends fake requests straight to your app without starting a real server, and checks the answers with `assert`. Each test passes or fails.
+
+1. Setup and first endpoint: FastAPI basics and your first test.
+
+2. Database models: salons, stylists, services, clients, and appointments with SQLAlchemy.
+Salon ──< Stylist ──< Appointment >── Client
+  │                       │
+  └──< Service ───────────┘ has many 
+  
+3. API endpoints: creating and reading data, with validation and tests.
+4. Availability logic: the core algorithm that finds open time slots. This is the most “interview-worthy” part.
+5. The AI agent: a Claude tool-use loop, starting with just two tools.
+6. Chat interface: a simple page where you can talk to your receptionist.
+7. SMS: receiving and replying to texts, in demo mode first.
+8. Background jobs: refilling cancelled appointments from the waitlist.
+9. Dashboard: the owner’s view in Next.js.
+10. Ship it: Docker, GitHub Actions, and deployment.
