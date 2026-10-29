@@ -1,39 +1,25 @@
-from app.database import Base
+#FILE defining the tables 
 
+from app.database import Base
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
+
+
 # Salon ──< Stylist ──< Appointment >── Client
 #   │                       │
 #   └──< Service ───────────┘ has many 
 
 class Salon(Base):
-    # A Python class that becomes a database table. "(Base)" signs it up
-    # with SQLAlchemy so it knows this class is a table.
     __tablename__ = "salons"
-    # The table's name inside the database. ForeignKeys use this name.
+    
     id: Mapped[int] = mapped_column(primary_key=True)
-    # A whole-number column called "id". primary_key=True means it's the
-    # unique ID for each salon; the database numbers them 1, 2, 3...
-
     name: Mapped[str] = mapped_column(String(100))
-    # A text column called "name", up to 100 characters long.
 
     services: Mapped[list["Service"]] = relationship(back_populates="salon")
-    # Not a column. A shortcut that gives you salon.services, a list of
-    # every Service at this salon. It pairs with Service.salon.
-
     appointments: Mapped[list["Appointment"]] = relationship(back_populates="salon")
-    # salon.appointments: a list of every appointment at this salon.
-    # Pairs with Appointment.salon.
-
     stylists: Mapped[list["Stylist"]] = relationship(back_populates="salon")
-    # salon.stylists: a list of every stylist at this salon. Plural,
-    # because it's a list. Pairs with Stylist.salon.
-
     clients: Mapped[list["Client"]] = relationship(back_populates="salon")
-    # salon.clients: a list of every client of this salon.
-    # Pairs with Client.salon.
 
 
 class Stylist(Base):
