@@ -10,22 +10,27 @@ from pydantic import BaseModel, ConfigDict, Field
 class SalonInput(BaseModel):
     name: str =Field(min_length=1, max_length=100)
 
-#what comes our of salon input field 
-class SalonOutput(BaseModel):
+#what comes out of salon input field 
+class SalonOut(BaseModel):
     #you can build this from an object’s attributes, not just a dictionary.
     model_config = ConfigDict(from_attributes=True)
     
     name: str
     id: int
+
+#what goes in and out of stylist input field
 class StylistInput(BaseModel):
     name: str = Field(min_length=1, max_length=100)
+    salon_id: int
 
-class StylistOutput(BaseModel):
+class StylistOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     name: str
     id: int
     salon_id: int
+
+
 
 
 

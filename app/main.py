@@ -5,7 +5,7 @@ from app import models
 
 from sqlalchemy import select
 
-from app.schemas import SalonInput, SalonOutput, StylistInput, StylistOutput
+from app.schemas import SalonInput, SalonOut, SalonOut, StylistInput, StylistOut 
 
 
 # create_all creates any missing tables and never wipes existing ones. It runs whenever main.py is imported, including when pytest imports it, which is what creates fullchair.db
@@ -20,21 +20,48 @@ app = FastAPI(title="FullChair")
 def health():
     return {"ok": True}
 
+#salons 
 
-#define route in route decorator 
-# status_code parameter defines the HTTP status code that the server returns when the endpoint finishes successfully.
-# The response_model parameter tells FastAPI exactly how to format, filter, and validate the data leaving your API. It uses Pydantic models to define the shape of the outgoing data.
-@app.post("/salons", response_model=SalonOutput, status_code=201)
-# This endpoint creates a new salon in the database, foollowing the 
-# schema defined by SalonInput, and a new session for this endpoint 
-def create_salon(salon: SalonInput, db: Session = Depends(get_db)):   
-    salon=models.Salon(name=salon.name)
+#create a salon
+@app.post("/salons", response_model=SalonOut, status_code=201)
+def create_salon(salon: SalonInput, db: Session = Depends(get_db)):
+    salon = models.Salon(name=salon.name)
     db.add(salon)
     db.commit()
     db.refresh(salon)
     return salon
 
-@app.post("/salons/stylists", response_model=StylistOutput, status_code=201)
-def createStylist(stylist: StylistInput, db: Session=Depends(get_db)):
-    stylist=models.Stylist(name=stylist.name, salon_id=stylist.salon_id)
+#list all salons
+@app.get("/salons", response_model=list[SalonOut])
+def list_salons(db: Session = Depends(get_db)):
+    return db.scalars(select(models.Salon).order_by(models.Salon.id)).all()
+
+
+# get a salon by id 
+@app.get("/salons/{salon_id}", response_model=SalonOut)
+def get_salon(salon_id: int, db: Session = Depends(get_db)):
+    salon = db.get(models.Salon, salon_id)
+    if salon is None:
+        raise HTTPException(status_code=404, detail="Salon not found")
+    return salon
+
+# stylist endpoints
+@app.post("/salons/{salon_id}/stylists", response_model=StylistOut, status_code=201)
+def create_stylist(salon_id: int, stylist_in: StylistInput, db: Session = Depends(get_db)):
+    salon = db.get(models.Salon, salon_id)
+    if salon is None:
+        raise HTTPException(status_code=404, detail="Salon not found")
+    stylist = models.Stylist(name=stylist_in.name, salon=salon)
+    db.add(stylist)
+    db.commit()
+    db.refresh(stylist)
+    return stylist
+
+
+@app.get("/salons/{salon_id}/stylists", response_model=list[StylistOut])
+def list_stylists(salon_id: int, db: Session = Depends(get_db)):
+    salon = db.get(models.Salon, salon_id)
+    if salon is None:
+        raise HTTPException(status_code=404, detail="Salon not found")
+    return salon.stylists
 
