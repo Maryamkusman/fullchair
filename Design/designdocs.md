@@ -3,8 +3,8 @@ Against the 10-step roadmap
 Step	Status
 1. Setup and first endpoint	✅ Done
 2. Database models	✅ Done
-3. API endpoints	Lesson given; confirm with pytest (8 passed)
-4. Availability algorithm	Lesson given; confirm with pytest (15 passed)
+3. API endpoints	Lesson given; confirm with pytest (8 passed) ✅ Done
+4. Availability algorithm	Lesson given; confirm with pytest (15 passed) ✅ Done
 5. AI agent (Claude tool use)	Not started
 6. Chat interface	Not started
 7. SMS (Twilio)	Not started

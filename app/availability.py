@@ -40,8 +40,39 @@ from app import models, schemas
 
 #  List everything it needs to know to answer it. Each of those things becomes a parameter, and the answer becomes the return value.
 def available_timeslots(
-    new_appt_duration: int
+    new_appt_duration: int,
+    appointments: List[models.Appointment],
+    daysstart: datetime,
+    daysend: datetime
+    )-> List[tuple[datetime, datetime]]:
+    # trying to fit 90 min slot in 
+    # pull appointments for the day 
+    # check prev appt end with next appt end
+    # check end of day 
+    appointments=sorted(appointments, key=lambda x: x.start_at)
+    new_appt_duration=timedelta(minutes=new_appt_duration)
 
-)-> List[tuple[datetime, datetime]]:
+    if not appointments:
+        if daysend-daysstart>=new_appt_duration:
+            return [(daysstart, daysend)]
+        return []
+    
+    firstappt=appointments[0]
+    lastappt=appointments[len(appointments)-1]
+    
+    slots=[]
+    if firstappt.start_at-daysstart>=new_appt_duration:
+            slots.append((daysstart, firstappt.start_at))
+    
+    for prev, appointment in zip(appointments, appointments[1:]):
+        if appointment.start_at-prev.end_at>=new_appt_duration:
+            slots.append((prev.end_at, appointment.start_at))
+    
+    if daysend-lastappt.end_at>=new_appt_duration:
+            slots.append((lastappt.end_at, daysend))  
+    return slots
 
 
+    
+
+    

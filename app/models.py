@@ -29,7 +29,7 @@ class Stylist(Base):
     name: Mapped[str] = mapped_column(String(100))
     salon_id: Mapped[int] = mapped_column(ForeignKey("salons.id"))
     
-    # salon: Mapped["Salon"] = relationship(back_populates="stylists")
+    salon: Mapped["Salon"] = relationship(back_populates="stylists")
     appointments: Mapped[list["Appointment"]] = relationship(back_populates="stylist")
 
 class Service(Base):
@@ -39,7 +39,7 @@ class Service(Base):
     salon_id: Mapped[int] = mapped_column(ForeignKey("salons.id"))
     price_cents: Mapped[int] = mapped_column(Integer)
     duration_minutes: Mapped[int]
-    # salon: Mapped["Salon"] = relationship(back_populates="services")
+    salon: Mapped["Salon"] = relationship(back_populates="services")
     appointments: Mapped[list["Appointment"]] = relationship(back_populates="service")
 
 class Appointment(Base):
@@ -53,7 +53,7 @@ class Appointment(Base):
     end_at: Mapped[datetime]
     status: Mapped[str] = mapped_column(String(50), default="booked")
 
-    # salon: Mapped["Salon"] = relationship(back_populates="appointments")
+    salon: Mapped["Salon"] = relationship(back_populates="appointments")
     stylist: Mapped["Stylist"] = relationship(back_populates="appointments")
     client: Mapped["Client"] = relationship(back_populates="appointments")
     service: Mapped["Service"] = relationship(back_populates="appointments")
@@ -66,5 +66,5 @@ class Client(Base):
     name: Mapped[str] = mapped_column(String(100))
     phone: Mapped[str] = mapped_column(String(20))
 
-    # salon: Mapped["Salon"] = relationship(back_populates="clients")
+    salon: Mapped["Salon"] = relationship(back_populates="clients")
     appointments: Mapped[list["Appointment"]] = relationship(back_populates="client")

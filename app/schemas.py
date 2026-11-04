@@ -24,7 +24,8 @@ class StylistOut(BaseModel):
     
     name: str
     id: int
-    
+    salon_id: int
+
 
 # service
 class ServiceInput(BaseModel):
