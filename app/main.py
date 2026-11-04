@@ -7,8 +7,9 @@ from sqlalchemy import select
 
 from app.schemas import SalonInput, SalonOut, SalonOut, StylistInput, StylistOut 
 
-
+#A rough guide: codes in the 200s mean success, 400s mean the client made a mistake, and 500s mean the server broke.
 # create_all creates any missing tables and never wipes existing ones. It runs whenever main.py is imported, including when pytest imports it, which is what creates fullchair.db
+# “Before running this endpoint, call get_db() and pass me what it gives back.” That’s a database session.
 Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI application
@@ -65,3 +66,4 @@ def list_stylists(salon_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Salon not found")
     return salon.stylists
 
+# appointment endpoints

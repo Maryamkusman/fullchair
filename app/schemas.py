@@ -6,13 +6,10 @@
 # FastAPI is built on top of Pydantic, so they work together automatically.
 from pydantic import BaseModel, ConfigDict, Field
 
-#what can go into salon input field
 class SalonInput(BaseModel):
-    name: str =Field(min_length=1, max_length=100)
+    name: str = Field(min_length=1, max_length=100)
 
-#what comes out of salon input field 
 class SalonOut(BaseModel):
-    #you can build this from an object’s attributes, not just a dictionary.
     model_config = ConfigDict(from_attributes=True)
     
     name: str
@@ -21,15 +18,63 @@ class SalonOut(BaseModel):
 #what goes in and out of stylist input field
 class StylistInput(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    salon_id: int
-
+    
 class StylistOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     name: str
     id: int
-    salon_id: int
+    
 
+# service
+class ServiceInput(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    price_cents: int
+    duration_minutes: int
+
+class ServiceOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    name: str
+    price_cents: int
+    duration_minutes: int
+    id: int
+
+# client 
+class ClientInput(BaseModel):
+    name: str=Field(min_length=1, max_length=100)
+    phone: str=Field(min_length=1, max_length=20)
+
+class ClientOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    name: str
+    phone: str
+    id: int
+
+# appointment
+class AppointmentInput(BaseModel):
+    stylist_id: int
+    client_id: int
+    service_id: int
+    start_at: str
+    end_at: str  
+class AppointmentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    stylist_id: int
+    client_id: int
+    service_id: int
+    start_at: str
+    end_at: str
+    status: str
+    id: int
+
+
+
+
+
+    
 
 
 
